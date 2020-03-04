@@ -16,7 +16,7 @@ import javax.inject.Inject
 
 class MainActivity : DaggerAppCompatActivity() {
 
-    @Inject
+
     lateinit var viewModel: MainViewModel
 
     @Inject
@@ -44,8 +44,10 @@ class MainActivity : DaggerAppCompatActivity() {
 //        body.drive()
 
 //        Log.i("thisAct", s)
-        setImage2()
+//        setImage2()
         viewModel = ViewModelProvider(this, viewModelProviderFactory).get(MainViewModel::class.java)
+        viewModel.hello()
+        viewModel.load(pixels.get(0), imagePlace)
 
     }
 

@@ -13,6 +13,8 @@ import dagger.Module
 import dagger.Provides
 import dagger.android.ContributesAndroidInjector
 import okhttp3.OkHttpClient
+import retrofit2.Retrofit
+import retrofit2.converter.gson.GsonConverterFactory
 import javax.inject.Singleton
 
 @Module(includes = [TheSecondModule::class])
@@ -20,7 +22,7 @@ abstract class ActivityBuilderModuleClass {
 
 
     @ContributesAndroidInjector(
-        modules = [MainViewModelModule::class]
+        modules = [MainViewModelModule::class, AuthModule::class]
     )
     abstract fun mainActivity():MainActivity
 
@@ -61,7 +63,7 @@ internal object TheSecondModule{
     @Singleton
     @Provides
     @JvmStatic
-    fun picassoProvider(context: Context, okHttp3Downloader: OkHttp3Downloader):Picasso{
+    fun picassoProvider(context: Context):Picasso{
         return Picasso.Builder(context).loggingEnabled(true).build()
     }
 
@@ -84,5 +86,15 @@ internal object TheSecondModule{
     @JvmStatic
     fun getContexts(application: Application):Context{
         return application.applicationContext
+    }
+
+    @Singleton
+    @Provides
+    @JvmStatic
+    fun provideRetrofitInstance(): Retrofit{
+        return Retrofit.Builder()
+            .baseUrl(BASE_URL)
+            .addConverterFactory(GsonConverterFactory.create())
+            .build()
     }
 }

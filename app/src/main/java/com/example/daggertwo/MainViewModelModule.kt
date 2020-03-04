@@ -16,10 +16,9 @@ abstract class MainViewModelModule {
     @ViewModelKey(MainViewModel::class)
     abstract fun bindMainViewModel(mainViewModel: MainViewModel):ViewModel
 
-
-
-    @Binds
-    abstract fun viewModelFactory2(viewModelProviderFactory: ViewModelProviderFactory):ViewModelProvider.Factory
+//
+//    @Binds
+//    abstract fun viewModelFactory2(viewModelProviderFactory: ViewModelProviderFactory):ViewModelProvider.Factory
 }
 
 @Module

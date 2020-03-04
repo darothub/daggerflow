@@ -54,4 +54,7 @@ dependencies {
     implementation "androidx.lifecycle:lifecycle-extensions:$lifecycle_version"
 
     implementation "androidx.lifecycle:lifecycle-livedata-ktx:$archLifecycleVersion"
+
+    implementation 'com.squareup.retrofit2:converter-gson:2.5.0'
+    implementation 'com.squareup.retrofit2:retrofit:2.5.0'
 }

@@ -7,6 +7,7 @@ import retrofit2.create
 
 @Module
 class AuthModule {
+
     @Provides
     fun provideAuthApi(retrofit: Retrofit):AuthApi{
         return retrofit.create(AuthApi::class.java)

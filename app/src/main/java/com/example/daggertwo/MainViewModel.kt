@@ -9,6 +9,7 @@ import androidx.lifecycle.MediatorLiveData
 import androidx.lifecycle.ViewModel
 import com.example.daggertwo.model.Todo
 import com.squareup.picasso.Picasso
+import io.reactivex.functions.Function
 import io.reactivex.schedulers.Schedulers
 import kotlinx.android.synthetic.main.activity_main.*
 import javax.inject.Inject
@@ -16,7 +17,7 @@ import javax.inject.Inject
 class MainViewModel @Inject constructor(var authApi: AuthApi) : ViewModel() {
     @Inject
     lateinit var picasso: Picasso
-    lateinit var authUser: MediatorLiveData<Todo>
+    lateinit var authUser: MediatorLiveData<ResourceResponse<Todo>>
 
     init {
         Log.i("ViewModel", "viewModel is working")
@@ -25,17 +26,17 @@ class MainViewModel @Inject constructor(var authApi: AuthApi) : ViewModel() {
         } else {
             Log.i("ViewModel", "AuthApi is not null")
         }
+//
+//        var hl = "he"
+//
+//        val h = authApi.getTodo(2)
+//            .toObservable()
+//            .subscribeOn(Schedulers.io())
+//            .blockingForEach {
+//                hl += it.title
+//            }
 
-        var hl = "he"
-
-        val h = authApi.getTodo(2)
-            .toObservable()
-            .subscribeOn(Schedulers.io())
-            .blockingForEach {
-                hl += it.title
-            }
-
-        Log.i("hl", hl)
+//        Log.i("hl", hl)
 
         authUser = MediatorLiveData()
 
@@ -49,8 +50,23 @@ class MainViewModel @Inject constructor(var authApi: AuthApi) : ViewModel() {
         picasso.load(image).into(imageView)
     }
     fun authenticateWithId(id:Int){
+        authUser.value = ResourceResponse.Loading<Todo>(Todo(), "Loading")
         val source = LiveDataReactiveStreams.fromPublisher(
             authApi.getTodo(id)
+                .onErrorReturn {
+                    val errorTodo = Todo()
+                    errorTodo.id = -1
+                    errorTodo
+                }
+                .map {todo ->
+                    if(todo.id == -1){
+                        ResourceResponse.Error<Todo>("Could not find todo", null)
+                    }
+                    else{
+                        ResourceResponse.Success<Todo>(todo)
+                    }
+
+                }
                 .subscribeOn(Schedulers.io())
 
         )
@@ -62,7 +78,7 @@ class MainViewModel @Inject constructor(var authApi: AuthApi) : ViewModel() {
     }
 
     //
-    fun observeTodo(): LiveData<Todo> {
+    fun observeTodo(): LiveData<ResourceResponse<Todo>> {
         return authUser
     }
 //    fun updateUI(authApi: AuthApi): Todo {

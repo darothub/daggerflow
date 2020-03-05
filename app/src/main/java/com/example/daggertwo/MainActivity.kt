@@ -5,6 +5,7 @@ import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.text.TextUtils
 import android.util.Log
+import android.view.View
 import android.widget.Toast
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
@@ -54,24 +55,8 @@ class MainActivity : DaggerAppCompatActivity() {
 //        Log.i("result", "${ress.title}")
 
 
-        btn.setOnClickListener {
-            val input = inputView.text.toString().trim()
-            if(TextUtils.isEmpty(input)){
-                Toast.makeText(this, "invalid input", Toast.LENGTH_LONG).show()
-            }
-            else{
-                viewModel.authenticateWithId(input.toInt())
-            }
-        }
-
-        viewModel.observeTodo().observe(this, Observer {
-            if(it == null){
-                Log.i("Todo", "Todo is null")
-            }
-            else{
-                Log.i("Todo", "${it.title}")
-            }
-        })
+        authenticate()
+        observeUser()
 
     }
 
@@ -84,4 +69,47 @@ class MainActivity : DaggerAppCompatActivity() {
 //        Picasso.get().load("https://cdn.pixabay.com/photo/2015/04/23/22/00/tree-736885__340.jpg").into(imagePlace)
     }
 
+    private fun authenticate(){
+
+
+        btn.setOnClickListener {
+            val input = inputView.text.toString().trim()
+            if(TextUtils.isEmpty(input)){
+                Toast.makeText(this, "invalid input", Toast.LENGTH_LONG).show()
+            }
+            else{
+                viewModel.authenticateWithId(input.toInt())
+            }
+        }
+    }
+
+    private fun observeUser(){
+        viewModel.observeTodo().observe(this, Observer {
+            when(it){
+                is ResourceResponse.Loading ->{
+                    progressBar.show()
+                    btn.hide()
+                    Log.i("Loading", "${it.message}")
+                }
+                is ResourceResponse.Error ->{
+                    progressBar.hide()
+                    btn.show()
+                    Log.i("Error", "${it.message}")
+                }
+                is ResourceResponse.Success ->{
+                    progressBar.hide()
+                    btn.show()
+                    Log.i("Success", "${it.data}")
+                }
+
+            }
+        })
+    }
+
+    private fun View.hide(){
+        this.visibility = View.GONE
+    }
+    private fun View.show(){
+        this.visibility = View.VISIBLE
+    }
 }

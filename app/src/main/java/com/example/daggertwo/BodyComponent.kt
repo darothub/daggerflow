@@ -11,6 +11,7 @@ import javax.inject.Singleton
 @Singleton
 @Component(modules = [ActivityBuilderModuleClass::class, AndroidSupportInjectionModule::class])
 interface BodyComponent : AndroidInjector<BaseApplication>{
+        fun sessionManager():SessionManager
 
         @Component.Builder
         interface Builder{

@@ -1,5 +1,6 @@
 package com.example.daggertwo
 
+import android.content.Intent
 import android.graphics.drawable.Drawable
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
@@ -101,11 +102,18 @@ class MainActivity : DaggerAppCompatActivity() {
                 is ResourceResponse.Success ->{
                     progressBar.hide()
                     btn.show()
+                    onLoginSuccess()
                     Log.i("Success", "${it.data}")
                 }
 
             }
         })
+    }
+
+    private fun onLoginSuccess(){
+        var intent = Intent(this, AfterMainActivity::class.java)
+        startActivity(intent)
+        finish()
     }
 
     private fun View.hide(){

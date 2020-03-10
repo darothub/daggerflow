@@ -27,6 +27,10 @@ abstract class ActivityBuilderModuleClass {
     )
     abstract fun mainActivity():MainActivity
 
+    @ContributesAndroidInjector(
+        modules = [AfterMainFragmentModule::class]
+    )
+    abstract fun afterMainActivity(): AfterMainActivity
 }
 
 @Module

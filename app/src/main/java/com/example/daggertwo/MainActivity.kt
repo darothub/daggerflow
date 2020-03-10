@@ -81,10 +81,12 @@ class MainActivity : DaggerAppCompatActivity() {
                 viewModel.authenticateWithId(input.toInt())
             }
         }
+
+        btn.invalidate()
     }
 
     private fun observeUser(){
-        viewModel.observeTodo().observe(this, Observer {
+        viewModel.observeTodoState().observe(this, Observer {
             when(it){
                 is ResourceResponse.Loading ->{
                     progressBar.show()

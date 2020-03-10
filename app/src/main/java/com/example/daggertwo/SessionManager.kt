@@ -12,7 +12,7 @@ class SessionManager @Inject constructor() {
 
     private var cachedTodo: MediatorLiveData<ResourceResponse<Todo>> = MediatorLiveData()
 
-    private fun authenticateWithId(source:LiveData<ResourceResponse<Todo>>){
+    fun authenticateWithId(source:LiveData<ResourceResponse<Todo>>){
         if(cachedTodo != null){
             cachedTodo.value = ResourceResponse.Loading(Todo(), "Loading...")
             cachedTodo.addSource(source){
@@ -22,18 +22,18 @@ class SessionManager @Inject constructor() {
         }
 
 
-        cachedTodo.addSource(source) {
-            cachedTodo.value = it
-            cachedTodo.removeSource(source)
-        }
+//        cachedTodo.addSource(source) {
+//            cachedTodo.value = it
+//            cachedTodo.removeSource(source)
+//        }
     }
 
-    private fun logout(){
+    fun logout(){
         Log.i("Todo", "log out")
         cachedTodo.value = ResourceResponse.Logout("Logging out", null)
     }
 
-    private fun getAuthTodo():LiveData<ResourceResponse<Todo>>{
+    fun getAuthTodo():LiveData<ResourceResponse<Todo>>{
         return cachedTodo
     }
 }

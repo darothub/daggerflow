@@ -14,10 +14,12 @@ import io.reactivex.schedulers.Schedulers
 import kotlinx.android.synthetic.main.activity_main.*
 import javax.inject.Inject
 
-class MainViewModel @Inject constructor(var authApi: AuthApi) : ViewModel() {
+class MainViewModel @Inject constructor(var authApi: AuthApi, var sessionManager: SessionManager) : ViewModel() {
     @Inject
     lateinit var picasso: Picasso
-    lateinit var authUser: MediatorLiveData<ResourceResponse<Todo>>
+//    lateinit var authUser: MediatorLiveData<ResourceResponse<Todo>>
+
+//    lateinit var sessionManager: SessionManager
 
     init {
         Log.i("ViewModel", "viewModel is working")
@@ -38,7 +40,7 @@ class MainViewModel @Inject constructor(var authApi: AuthApi) : ViewModel() {
 
 //        Log.i("hl", hl)
 
-        authUser = MediatorLiveData()
+//        authUser = MediatorLiveData()
 
     }
 
@@ -50,8 +52,20 @@ class MainViewModel @Inject constructor(var authApi: AuthApi) : ViewModel() {
         picasso.load(image).into(imageView)
     }
     fun authenticateWithId(id:Int){
-        authUser.value = ResourceResponse.Loading<Todo>(Todo(), "Loading")
-        val source = LiveDataReactiveStreams.fromPublisher(
+        Log.i("mainViewModel", "Attempting to login")
+//        authUser.value = ResourceResponse.Loading<Todo>(Todo(), "Loading")
+////        val source =
+//
+//        authUser.addSource(source) {
+//            authUser.value = it
+//            authUser.removeSource(source)
+//        }
+
+        sessionManager.authenticateWithId(queryTodoId(id))
+    }
+
+    fun queryTodoId(id: Int):LiveData<ResourceResponse<Todo>>{
+        return LiveDataReactiveStreams.fromPublisher(
             authApi.getTodo(id)
                 .onErrorReturn {
                     val errorTodo = Todo()
@@ -70,16 +84,10 @@ class MainViewModel @Inject constructor(var authApi: AuthApi) : ViewModel() {
                 .subscribeOn(Schedulers.io())
 
         )
-
-        authUser.addSource(source) {
-            authUser.value = it
-            authUser.removeSource(source)
-        }
     }
-
     //
-    fun observeTodo(): LiveData<ResourceResponse<Todo>> {
-        return authUser
+    fun observeTodoState(): LiveData<ResourceResponse<Todo>> {
+        return sessionManager.getAuthTodo()
     }
 //    fun updateUI(authApi: AuthApi): Todo {
 //

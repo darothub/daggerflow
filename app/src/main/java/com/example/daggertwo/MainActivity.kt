@@ -79,7 +79,8 @@ class MainActivity : DaggerAppCompatActivity() {
                 Toast.makeText(this, "invalid input", Toast.LENGTH_LONG).show()
             }
             else{
-                viewModel.authenticateWithId(input.toInt())
+//                viewModel.authenticateWithId(input.toInt())
+                onLoginSuccess()
             }
         }
 

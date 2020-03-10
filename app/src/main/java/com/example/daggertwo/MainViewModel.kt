@@ -52,7 +52,6 @@ class MainViewModel @Inject constructor(var authApi: AuthApi, var sessionManager
         picasso.load(image).into(imageView)
     }
     fun authenticateWithId(id:Int){
-        Log.i("mainViewModel", "Attempting to login")
 //        authUser.value = ResourceResponse.Loading<Todo>(Todo(), "Loading")
 ////        val source =
 //

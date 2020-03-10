@@ -28,7 +28,7 @@ abstract class ActivityBuilderModuleClass {
     abstract fun mainActivity():MainActivity
 
     @ContributesAndroidInjector(
-        modules = [AfterMainFragmentModule::class]
+        modules = [AfterMainFragmentModule::class, ProfileViewModelModule::class]
     )
     abstract fun afterMainActivity(): AfterMainActivity
 }
